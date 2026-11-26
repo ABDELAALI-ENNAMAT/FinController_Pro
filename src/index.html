@@ -1,0 +1,1089 @@
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <button id="sidebarToggle" class="header-btn" title="Collapse sidebar">≡</button>
+    <div class="logo"><span class="logo-dot"></span>FinController Pro</div>
+    <span class="status-dot" style="margin-left: 8px;">Nexova Group S.A.</span>
+    <div class="header-divider"></div>
+    <div class="header-chips">
+      <button class="chip active" data-period="ytd">YTD</button>
+      <button class="chip" data-period="mtd">MTD</button>
+      <button class="chip" data-period="qtd">QTD</button>
+      <button class="chip" data-period="annual">Annual</button>
+    </div>
+    <div class="header-spacer"></div>
+    <span id="monthEndBadge" class="status-dot">DEMO DATA</span>
+    <span id="alertBadge" class="badge-red" style="margin-left:8px;">2 HIGH Alerts</span>
+    <button id="ai-header-status" onclick="openAIModal()" title="Financial Analyst Engine">⬡ Analyst</button>
+    <div class="header-divider"></div>
+    <button id="themeToggle" title="Toggle dark/light mode" style="margin-left:8px;">○ Light</button>
+    <div class="header-divider"></div>
+    <button class="header-btn" onclick="document.getElementById('uploadInput').click()">↑ Import</button>
+    <input type="file" id="uploadInput" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleFileUpload(event)">
+    <button class="header-btn" onclick="exportPDF()">↓ PDF</button>
+    <button class="header-btn primary" onclick="exportPPT()">↓ PPT</button>
+    <button class="header-btn" onclick="exportExcel()">↓ XLS</button>
+  </header>
+
+  <div id="body">
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+      <div class="nav-group">
+        <div class="nav-group-title">Overview</div>
+        <div class="nav-item active" data-section="executive-summary"><span class="nav-dot blue"></span> <span class="nav-text">Executive Summary</span></div>
+        <div class="nav-item" data-section="kpi-scorecard"><span class="nav-dot blue"></span> <span class="nav-text">KPI Scorecard</span></div>
+        <div class="nav-item" data-section="mgmt-dashboard"><span class="nav-dot blue"></span> <span class="nav-text">Management Dashboard</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Financials</div>
+        <div class="nav-item" data-section="pnl-statement"><span class="nav-text">P&L Statement</span></div>
+        <div class="nav-item" data-section="balance-sheet"><span class="nav-text">Balance Sheet</span></div>
+        <div class="nav-item" data-section="interco-recon"><span class="nav-dot amber"></span> <span class="nav-text">Intercompany Recon</span></div>
+        <div class="nav-item" data-section="cash-flow"><span class="nav-text">Cash Flow</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Performance</div>
+        <div class="nav-item" data-section="budget-actuals"><span class="nav-text">Budget vs Actuals</span></div>
+        <div class="nav-item" data-section="variance-analysis"><span class="nav-text">Variance Analysis</span></div>
+        <div class="nav-item" data-section="margin-analysis"><span class="nav-text">Margin Analysis</span></div>
+        <div class="nav-item" data-section="cost-centers"><span class="nav-text">Cost Centers</span></div>
+        <div class="nav-item" data-section="commentary-workshop"><span class="nav-dot blue"></span> <span class="nav-text">Commentary Workshop</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Working Capital</div>
+        <div class="nav-item" data-section="wc-dashboard"><span class="nav-text">WC Dashboard</span></div>
+        <div class="nav-item" data-section="aging-detail"><span class="nav-text">Aging Detail</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Forward-Looking</div>
+        <div class="nav-item" data-section="rolling-forecast"><span class="nav-text">Rolling Forecast</span></div>
+        <div class="nav-item" data-section="forecast-accuracy"><span class="nav-dot blue"></span> <span class="nav-text">Forecast Accuracy</span></div>
+        <div class="nav-item" data-section="scenario-planning"><span class="nav-text">Scenario Planning</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Risk & Governance</div>
+        <div class="nav-item" data-section="alerts"><span class="nav-dot red"></span> <span class="nav-text">Variance Alerts</span></div>
+        <div class="nav-item" data-section="accruals-register"><span class="nav-dot amber"></span> <span class="nav-text">Accruals Register</span></div>
+        <div class="nav-item" data-section="debt-tracker"><span class="nav-text">Debt Tracker</span></div>
+        <div class="nav-item" data-section="close-checklist"><span class="nav-text">Close Checklist</span></div>
+      </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main id="content">
+      
+      <!-- 1. EXECUTIVE SUMMARY -->
+      <div class="section active" id="executive-summary">
+        <div class="section-title">
+          <span>Executive Summary</span>
+          <button class="header-btn" onclick="openCommentaryWorkshop('Executive Summary')" style="font-size:12px">⬡ Draft Commentary</button>
+        </div>
+        <div class="section-subtitle" id="es-period-subtitle">March 2025 YTD | Consolidated</div>
+        
+        <div class="kpi-grid" id="es-kpi-container"></div>
+        
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Revenue Waterfall (Budget to Actual)</div>
+            <div class="chart-container"><div id="es-rev-waterfall" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">EBITDA Bridge (PY to Actual)</div>
+            <div class="chart-container"><div id="es-ebitda-bridge" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+        
+        <div class="grid-2">
+          <div>
+            <h3 class="chart-title">Management Commentary</h3>
+            <div class="commentary-block" id="es-commentary"></div>
+          </div>
+          <div>
+            <h3 class="chart-title">Key Alerts</h3>
+            <div id="es-alerts"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. KPI SCORECARD -->
+      <div class="section" id="kpi-scorecard">
+        <h2 class="section-title">KPI Scorecard</h2>
+        <div class="section-subtitle" id="ksc-period-subtitle">Performance Indicators — March 2025 YTD</div>
+        <div class="chart-title">Revenue & Volume</div>
+        <div class="grid-4" id="ksc-revenue"></div>
+        <div class="chart-title" style="margin-top:16px">Profitability</div>
+        <div class="grid-4" id="ksc-profit"></div>
+        <div class="chart-title" style="margin-top:16px">Margins</div>
+        <div class="grid-4" id="ksc-margins"></div>
+        <div class="chart-title" style="margin-top:16px">Liquidity & Working Capital</div>
+        <div class="grid-4" id="ksc-liquidity"></div>
+      </div>
+
+      <!-- 3. MANAGEMENT DASHBOARD -->
+      <div class="section" id="mgmt-dashboard">
+        <h2 class="section-title">Management Dashboard</h2>
+        <div class="section-subtitle">Key Trends & Multi-Period Dynamics</div>
+        <div class="commentary-block" id="md-narrative" style="margin-bottom:16px"></div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Revenue Trend (12 Months)</div>
+            <div class="chart-container"><div id="md-rev-trend" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">EBITDA & Margin %</div>
+            <div class="chart-container"><div id="md-ebitda-margin" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Free Cash Flow</div>
+            <div class="chart-container"><div id="md-fcf" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Cost Breakdown (COGS vs OPEX)</div>
+            <div class="chart-container"><div id="md-cost" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. P&L STATEMENT -->
+      <div class="section" id="pnl-statement">
+        <h2 class="section-title">Profit & Loss Statement</h2>
+        <div class="section-subtitle" id="pnl-period-subtitle">Consolidated Financials — March 2025 YTD</div>
+        <div class="table-wrap">
+          <table class="data-table" id="pnl-table">
+            <thead>
+              <tr>
+                <th>Line Item</th>
+                <th id="pnl-th-act">Actual YTD</th>
+                <th id="pnl-th-bdg">Budget YTD</th>
+                <th>Variance €</th>
+                <th>Var %</th>
+                <th id="pnl-th-py">PY YTD</th>
+                <th>Var vs PY</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5. BALANCE SHEET (UPGRADED WITH KPIS & TREND CHART) -->
+      <div class="section" id="balance-sheet">
+        <h2 class="section-title">Balance Sheet <span id="bs-status" style="margin-left:12px"></span></h2>
+        <div class="section-subtitle">As of March 31, 2025 (in €M)</div>
+        
+        <div class="grid-4" id="bs-kpi-container" style="margin-bottom:16px;"></div>
+
+        <div class="grid-3" style="margin-bottom:16px;">
+          <div class="table-wrap">
+            <table class="data-table" id="bs-assets">
+              <thead><tr><th>Assets</th><th>Amount</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="bs-liabs">
+              <thead><tr><th>Liabilities</th><th>Amount</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="bs-equity">
+              <thead><tr><th>Equity</th><th>Amount</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Balance Sheet Structure & Net Debt (€M)</div>
+            <div class="chart-container"><div id="bs-trend-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Capital Structure & Solvency Diagnosis</div>
+            <div class="commentary-block" id="bs-analysis-card" style="height:100%; margin-bottom:0;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. INTERCOMPANY RECONCILIATION (UPGRADED WITH EXPOSURE MATRIX) -->
+      <div class="section" id="interco-recon">
+        <h2 class="section-title">Intercompany Reconciliation</h2>
+        <div class="section-subtitle">Entity-Level Balance Matching — March 2025 Close</div>
+
+        <div class="grid-3" id="interco-kpi-container"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">Show differences above:</span>
+          <input type="number" id="interco-threshold" class="form-input" style="width:100px; padding:4px 8px" value="0.01" step="0.01" oninput="renderIntercoRecon()">
+          <span style="font-size:12px; color:var(--text-secondary)">€M</span>
+        </div>
+
+        <div class="table-wrap" style="margin-bottom: 16px;">
+          <table class="data-table" id="interco-table">
+            <thead>
+              <tr>
+                <th>From Entity</th>
+                <th>To Entity</th>
+                <th>Flow Type</th>
+                <th>Entity A Reports</th>
+                <th>Entity B Reports</th>
+                <th>Difference €</th>
+                <th>Status</th>
+                <th style="text-align:center">Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="chart-card">
+            <div class="chart-title">Entity Exposure Matrix (€M)</div>
+            <div class="table-wrap">
+              <table class="data-table" id="interco-matrix-table">
+                <thead></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Resolution Cycle & Timing Metrics</div>
+            <div class="commentary-block" id="interco-cycle-card" style="height:100%; margin-bottom:0;"></div>
+          </div>
+        </div>
+
+        <div id="interco-readiness-banner"></div>
+      </div>
+
+      <!-- 7. CASH FLOW (UPGRADED WITH KPIS & RUNWAY) -->
+      <div class="section" id="cash-flow">
+        <h2 class="section-title">Cash Flow Statement</h2>
+        <div class="section-subtitle">Indirect Method YTD — March 2025 (in €M)</div>
+
+        <div class="grid-4" id="cf-kpi-container" style="margin-bottom:16px;"></div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="table-wrap">
+            <table class="data-table" id="cf-table">
+              <thead><tr><th>Line Item</th><th>Amount</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Free Cash Flow Bridge (YTD)</div>
+            <div class="chart-container"><div id="cf-bridge" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Quarterly Cash Flow Breakdown (€M)</div>
+            <div class="chart-container"><div id="cf-quarterly-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Cash Quality & Liquidity Runway</div>
+            <div class="commentary-block" id="cf-quality-card" style="height:100%; margin-bottom:0;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. BUDGET VS ACTUALS -->
+      <div class="section" id="budget-actuals">
+        <h2 class="section-title">Budget vs Actuals</h2>
+        <div class="section-subtitle" id="bva-period-subtitle">Detailed Variance Commentary — March 2025 YTD</div>
+        
+        <div class="filter-bar">
+          <span class="filter-label">Materiality Filter:</span>
+          <input type="range" id="bva-filter" min="0" max="20" value="5">
+          <span id="bva-filter-val" style="font-size:12px; font-weight:600;">5%</span>
+          <button class="header-btn" id="bva-sort-btn" style="margin-left:auto;">Sort by Magnitude</button>
+        </div>
+
+        <div class="table-wrap" style="margin-bottom: 24px;">
+          <table class="data-table" id="bva-table">
+            <thead>
+              <tr>
+                <th>Line Item</th>
+                <th>Actual</th>
+                <th>Budget</th>
+                <th>Var €</th>
+                <th>Var %</th>
+                <th>Status</th>
+                <th style="width: 36%">Commentary</th>
+                <th style="width: 40px; text-align:center">AI</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-title">EBITDA Budget Bridge</div>
+          <div class="chart-container"><div id="bva-ebitda-bridge" style="width:100%;min-height:320px;"></div></div>
+        </div>
+      </div>
+
+      <!-- 9. VARIANCE ANALYSIS (UPGRADED WITH KPIS & DECOMPOSITION TABLE) -->
+      <div class="section" id="variance-analysis">
+        <h2 class="section-title">Variance Analysis</h2>
+        <div class="section-subtitle">Price / Volume / Mix Decomposition</div>
+
+        <div class="grid-4" id="var-kpi-container" style="margin-bottom:16px;"></div>
+
+        <div class="commentary-block" id="var-commentary" style="margin-bottom:16px"></div>
+        
+        <div class="table-wrap" style="margin-bottom:16px">
+          <table class="data-table" id="var-vpm-table">
+            <thead><tr><th>Driver</th><th>Variance €</th><th>Variance %</th><th>Explanation</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="chart-card">
+            <div class="chart-title">Revenue Variance Walk</div>
+            <div class="chart-container"><div id="var-rev-walk" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Cost of Goods Variance</div>
+            <div class="chart-container"><div id="var-cost-walk" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">P&L Detailed Variance Decomposition (€M)</div>
+          <div class="table-wrap">
+            <table class="data-table" id="var-decomp-table">
+              <thead>
+                <tr>
+                  <th>Line Item</th><th>Actual</th><th>Budget</th><th>Var €</th><th>Var %</th><th>Volume Effect</th><th>Price/Mix</th><th>FX Effect</th><th>Structural</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. MARGIN ANALYSIS (UPGRADED WITH KPIS, OPERATING LEVERAGE & WATERFALL) -->
+      <div class="section" id="margin-analysis">
+        <h2 class="section-title">Margin Analysis</h2>
+        <div class="section-subtitle">Operating Leverage & Profit Conversion</div>
+
+        <div class="grid-4" id="ma-kpi-container" style="margin-bottom:16px;"></div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="chart-card">
+            <div class="chart-title">Gross Margin vs Target</div>
+            <div class="chart-container"><div id="ma-gross" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">EBITDA Margin vs Target</div>
+            <div class="chart-container"><div id="ma-ebitda" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Operating Leverage (Revenue vs EBITDA Correlation)</div>
+            <div class="chart-container"><div id="ma-leverage-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">P&L Margin Conversion Waterfall (% of Revenue)</div>
+            <div class="chart-container"><div id="ma-waterfall-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. COST CENTERS -->
+      <div class="section" id="cost-centers">
+        <div class="section-title">
+          <span>Cost Center Breakdown</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="filter-label">Entity Filter:</span>
+            <select id="cc-entity-filter" class="filter-select" onchange="renderCostCenters()">
+              <option value="all">Consolidated (All)</option>
+              <option value="div-a">Division A — Industrial</option>
+              <option value="div-b">Division B — Services</option>
+              <option value="hq">HQ / Corporate</option>
+            </select>
+          </div>
+        </div>
+        <div class="section-subtitle">OpEx & FTE Tracking by Operating Unit</div>
+        <div class="table-wrap" style="margin-bottom:20px;">
+          <table class="data-table" id="cc-table">
+            <thead>
+              <tr>
+                <th>Division / Dept</th>
+                <th>Actual €</th>
+                <th>Budget €</th>
+                <th>Var €</th>
+                <th>Var %</th>
+                <th>FTE Actual</th>
+                <th>FTE Budget</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Spend by Division (€M)</div>
+            <div class="chart-container"><div id="cc-spend" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Headcount Actual vs Budget by Division</div>
+            <div class="chart-container"><div id="cc-fte" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. COMMENTARY WORKSHOP -->
+      <div class="section" id="commentary-workshop">
+        <h2 class="section-title">Commentary Workshop</h2>
+        <div class="section-subtitle">AI-Assisted Management Pack Narrative Workspace</div>
+
+        <div class="grid-commentary">
+          <!-- Left: Input panel -->
+          <div class="kpi-card" style="padding:16px;">
+            <div class="chart-title" style="margin-bottom:12px;">Commentary Scope</div>
+            
+            <div class="form-group">
+              <label class="form-label">Report Section</label>
+              <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                  <input type="radio" name="cw-scope" value="Executive Summary" checked> Executive Summary
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                  <input type="radio" name="cw-scope" value="Revenue Deep-Dive"> Revenue Deep-Dive
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                  <input type="radio" name="cw-scope" value="EBITDA Bridge"> EBITDA Bridge
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                  <input type="radio" name="cw-scope" value="Working Capital"> Working Capital
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                  <input type="radio" name="cw-scope" value="Outlook"> Outlook
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Reporting Period</label>
+              <input type="text" id="cw-period" class="form-input" value="March 2025 YTD" readonly>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Audience Register</label>
+              <select id="cw-audience" class="form-select">
+                <option value="CFO (brief, strategic)">CFO (brief, strategic)</option>
+                <option value="Board (formal, summary)">Board (formal, summary)</option>
+                <option value="Ops Manager (detailed, operational)">Ops Manager (detailed, operational)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Key Highlights / Context</label>
+              <textarea id="cw-highlights" class="form-textarea" rows="3" placeholder="Add specific points to include (e.g. Heidelberg delay, energy costs)..."></textarea>
+            </div>
+
+            <div class="form-group" style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                <input type="checkbox" id="cw-opt-py" checked> Include prior year comparison
+              </label>
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer">
+                <input type="checkbox" id="cw-opt-fwd" checked> Include forward-looking statement
+              </label>
+            </div>
+
+            <button class="header-btn primary" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="generateCommentaryWorkshop()">
+              ⬡ Generate Commentary
+            </button>
+          </div>
+
+          <!-- Middle: Preview -->
+          <div class="chart-card" style="min-height:480px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <div class="chart-title" style="margin:0;">Generated Commentary Preview</div>
+              <div id="cw-loading-badge" style="display:none; font-size:11px; color:var(--accent);" class="streaming">Analyst Drafting...</div>
+            </div>
+
+            <div id="cw-preview-card" class="commentary-paper">
+              <p>Click <strong>"⬡ Generate Commentary"</strong> to synthesize current financial KPIs, variance alerts, and operational trends into a publication-ready management pack narrative.</p>
+            </div>
+
+            <div style="display:flex; gap:8px; margin-top:16px;">
+              <button class="header-btn" onclick="copyCommentaryToClipboard()">📋 Copy</button>
+              <button class="header-btn primary" onclick="insertCommentaryIntoReport()">↓ Insert into Report</button>
+              <button class="header-btn" onclick="generateCommentaryWorkshop()">⬡ Regenerate</button>
+            </div>
+          </div>
+
+          <!-- Right: History -->
+          <div class="kpi-card" style="padding:16px; overflow-y:auto; max-height:550px;">
+            <div class="chart-title" style="margin-bottom:12px;">Commentary History</div>
+            <div id="cw-history-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. WC DASHBOARD -->
+      <div class="section" id="wc-dashboard">
+        <h2 class="section-title">Working Capital Dashboard</h2>
+        <div class="section-subtitle">Liquidity, Working Capital Cycles & Efficiency Metrics</div>
+
+        <div id="wc-alert-banners"></div>
+
+        <div class="grid-4" id="wc-kpi-container"></div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Cash Conversion Cycle (CCC) Trend</div>
+            <div class="chart-container"><div id="wc-ccc-trend" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">NWC Bridge (Prior to Current)</div>
+            <div class="chart-container"><div id="wc-nwc-bridge" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14. AGING DETAIL -->
+      <div class="section" id="aging-detail">
+        <h2 class="section-title">Aging Detail</h2>
+        <div class="section-subtitle">Accounts Receivable, Accounts Payable & Inventory Cover</div>
+        <div class="tabs">
+          <button class="tab active" data-tab="aging-ar">AR Aging</button>
+          <button class="tab" data-tab="aging-ap">AP Aging</button>
+          <button class="tab" data-tab="aging-inv">Inventory</button>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Aging Buckets</div>
+            <div class="chart-container"><div id="aging-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="aging-table">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15. ROLLING FORECAST (UPGRADED WITH TRAJECTORY & GAP TRACKER) -->
+      <div class="section" id="rolling-forecast">
+        <h2 class="section-title">Rolling Forecast</h2>
+        <div class="section-subtitle">12-Month Rolling Outlook with Dynamic Scenario Drivers</div>
+        
+        <div class="tabs">
+          <button class="tab active" data-scenario="base">Base Scenario</button>
+          <button class="tab" data-scenario="bear">Bear Scenario</button>
+          <button class="tab" data-scenario="bull">Bull Scenario</button>
+        </div>
+        
+        <div class="grid-4">
+          <div class="kpi-card">
+            <div class="kpi-label">Volume Growth %</div>
+            <input type="range" class="slider-input" id="rf-vol" min="-10" max="10" step="1" value="0" oninput="recomputeForecast()">
+            <div class="kpi-value" id="rf-vol-val">0%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Price Change %</div>
+            <input type="range" class="slider-input" id="rf-price" min="-5" max="10" step="1" value="0" oninput="recomputeForecast()">
+            <div class="kpi-value" id="rf-price-val">0%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">OpEx Inflation %</div>
+            <input type="range" class="slider-input" id="rf-opex" min="0" max="10" step="1" value="0" oninput="recomputeForecast()">
+            <div class="kpi-value" id="rf-opex-val">0%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">FX Rate vs Budget</div>
+            <input type="range" class="slider-input" id="rf-fx" min="0.9" max="1.1" step="0.01" value="1.0" oninput="recomputeForecast()">
+            <div class="kpi-value" id="rf-fx-val">1.0x</div>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-bottom: 20px;">
+          <table class="data-table forecast-table" id="rf-table">
+            <thead>
+              <tr>
+                <th>Line Item</th>
+                <th>Jan (A)</th><th>Feb (A)</th><th>Mar (A)</th>
+                <th>Apr (F)</th><th>May (F)</th><th>Jun (F)</th>
+                <th>Jul (F)</th><th>Aug (F)</th><th>Sep (F)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="chart-card">
+            <div class="chart-title">Revenue Forecast (€M)</div>
+            <div class="chart-container"><div id="rf-chart-rev" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">EBITDA Forecast (€M)</div>
+            <div class="chart-container"><div id="rf-chart-ebitda" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Full-Year Trajectory & Budget Outlook</div>
+            <div class="commentary-block" id="rf-trajectory-card" style="height:100%; margin-bottom:0;"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Forecast vs Budget Gap Tracker (€M)</div>
+            <div class="table-wrap">
+              <table class="data-table" id="rf-gap-table">
+                <thead>
+                  <tr><th>Month</th><th>Forecast</th><th>Budget</th><th>Monthly Gap</th><th>Cumulative Gap</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16. FORECAST ACCURACY SCORECARD -->
+      <div class="section" id="forecast-accuracy">
+        <h2 class="section-title">Forecast Accuracy Scorecard</h2>
+        <div class="section-subtitle">How Good Was Our Last Forecast? (Backtesting 6-Month Rolling Forecasts)</div>
+
+        <div class="grid-3" id="fa-kpi-container"></div>
+
+        <div class="table-wrap" style="margin-bottom: 20px;">
+          <table class="data-table" id="fa-table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Rev Forecast</th>
+                <th>Rev Actual</th>
+                <th>Rev Error €</th>
+                <th>Rev Error %</th>
+                <th>EBITDA Forecast</th>
+                <th>EBITDA Actual</th>
+                <th>EBITDA Error €</th>
+                <th>EBITDA Error %</th>
+                <th>Accuracy Score</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">Revenue Forecast vs Actual (6 Months)</div>
+            <div class="chart-container"><div id="fa-rev-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">EBITDA Error by Month (€M)</div>
+            <div class="chart-container"><div id="fa-ebitda-chart" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+
+        <div id="fa-bias-card" class="commentary-block" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- 17. SCENARIO PLANNING -->
+      <div class="section" id="scenario-planning">
+        <h2 class="section-title">Scenario Planning</h2>
+        <div class="section-subtitle">EBITDA Sensitivity Matrix & Bank Covenant Headroom</div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="chart-title">EBITDA Sensitivity (Volume vs Price) (€M)</div>
+            <div class="table-wrap">
+              <table class="data-table" id="sp-heatmap">
+                <thead></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Covenant Headroom (Net Debt / EBITDA)</div>
+            <div class="chart-container"><div id="sp-covenant" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+        <div class="grid-3" style="margin-top:16px" id="sp-scenario-cards"></div>
+      </div>
+
+      <!-- 18. ALERTS -->
+      <div class="section" id="alerts">
+        <h2 class="section-title">Variance Alerts & Red Flags</h2>
+        <div class="section-subtitle">Sorted by urgency. Address items 8+ first.</div>
+        <div id="alerts-container"></div>
+      </div>
+
+      <!-- 19. ACCRUALS REGISTER -->
+      <div class="section" id="accruals-register">
+        <div class="section-title">
+          <span>Accruals Register</span>
+          <button class="header-btn primary" onclick="openNewAccrualModal()">+ New Accrual</button>
+        </div>
+        <div class="section-subtitle">Recurring & One-Off Accruals — March 2025</div>
+
+        <div class="grid-3" id="accruals-kpi-container"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">Category:</span>
+          <select id="accruals-filter-cat" class="filter-select">
+            <option value="All">All Categories</option>
+            <option value="Personnel">Personnel</option>
+            <option value="Premises">Premises</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Operations">Operations</option>
+            <option value="Finance">Finance</option>
+            <option value="Provisions">Provisions</option>
+          </select>
+
+          <span class="filter-label">Entity:</span>
+          <select id="accruals-filter-ent" class="filter-select">
+            <option value="All">All Entities</option>
+            <option value="Consolidated">Consolidated</option>
+            <option value="Div A">Division A</option>
+            <option value="Div B">Division B</option>
+            <option value="HQ">HQ</option>
+          </select>
+
+          <button class="header-btn" onclick="renderAccrualsRegister()">Filter Table</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table" id="accruals-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Entity</th>
+                <th>Monthly Amount (€M)</th>
+                <th>Basis</th>
+                <th>Owner</th>
+                <th>Jan Status</th>
+                <th>Feb Status</th>
+                <th>Mar Status</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 20. DEBT TRACKER (UPGRADED WITH INTEREST & MATURITY URGENCY) -->
+      <div class="section" id="debt-tracker">
+        <h2 class="section-title">Debt Tracker</h2>
+        <div class="section-subtitle">Credit Facilities, Maturity Schedule & Covenants</div>
+        <div class="grid-3" id="debt-covenants"></div>
+        <div class="grid-2 mt-4">
+          <div class="table-wrap">
+            <table class="data-table" id="debt-table">
+              <thead><tr><th>Facility</th><th>Lender</th><th>Limit</th><th>Drawn</th><th>Rate</th><th>Maturity</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Maturity Profile</div>
+            <div class="chart-container"><div id="debt-maturity" style="width:100%;min-height:320px;"></div></div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:16px;">
+          <div class="chart-card">
+            <div class="chart-title">Interest Cost & Rate Risk Sensitivity</div>
+            <div class="commentary-block" id="debt-interest-card" style="height:100%; margin-bottom:0;"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Refinancing Watch & Liquidity Headroom</div>
+            <div class="commentary-block" id="debt-urgency-card" style="height:100%; margin-bottom:0;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 21. CLOSE CHECKLIST (FULLY UPGRADED ENTERPRISE CLOSE WORKSPACE) -->
+      <div class="section" id="close-checklist">
+        <div class="section-title">
+          <span>Month-End Close Checklist <span id="close-d-badge" class="d-counter-badge">D+7</span></span>
+          <div style="display:flex; gap:8px;">
+            <button class="header-btn" onclick="openBlockersModal()">⬡ Blockers Report</button>
+            <button class="header-btn" onclick="exportChecklistToExcel()">↓ Export</button>
+          </div>
+        </div>
+        <div class="section-subtitle">Critical Path, Task Dependencies & Audit Status</div>
+        
+        <!-- Close Health Dashboard -->
+        <div class="grid-4" id="close-health-kpis" style="margin-bottom:16px;"></div>
+
+        <!-- Critical Path flow -->
+        <div class="critical-path-wrap" id="critical-path-container"></div>
+
+        <!-- Close Issues Action Panel -->
+        <div id="close-issues-panel" style="margin-bottom:16px;"></div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span class="progress-label" style="margin:0;">Overall Close Progress</span>
+          <span class="progress-label" id="chk-progress-pct" style="margin:0; font-weight:600;">0%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="chk-progress-bar" style="width:0%"></div>
+        </div>
+        
+        <div id="checklist-container" style="margin-bottom:20px;"></div>
+
+        <!-- Time Tracker Table -->
+        <div class="chart-card">
+          <div class="chart-title">Close Timeline & Historical Milestones Tracker</div>
+          <div class="table-wrap">
+            <table class="data-table" id="close-timeline-table">
+              <thead>
+                <tr><th>Phase</th><th>Target D+</th><th>Actual D+</th><th>Variance</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td style="font-weight:600">AP/AR Cutoff</td><td>D+0 (Apr 1)</td><td>D+0</td><td class="num-fav">On Track</td><td><span class="status-badge posted">✓ Completed</span></td></tr>
+                <tr><td style="font-weight:600">Accruals Register</td><td>D+1 (Apr 2)</td><td>D+2</td><td class="num-watch">+1 day</td><td><span class="status-badge posted">✓ Completed</span></td></tr>
+                <tr><td style="font-weight:600">Journals & Interco Elimination</td><td>D+3 (Apr 3)</td><td>D+3 (In Progress)</td><td class="num-fav">On Track</td><td><span class="status-badge pending">● In Progress</span></td></tr>
+                <tr><td style="font-weight:600">Cost Center & Flash Pack</td><td>D+7 (Apr 7)</td><td>TBD</td><td>—</td><td><span class="status-badge notreq">Upcoming</span></td></tr>
+                <tr><td style="font-weight:600">CFO Sign-Off & Consolidation</td><td>D+9 (Apr 9)</td><td>TBD</td><td>—</td><td><span class="status-badge notreq">Upcoming</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL: BLOCKERS REPORT -->
+  <div id="modal-blockers-report" class="modal-overlay hidden" onclick="if(event.target===this)closeBlockersModal()">
+    <div class="modal-card wide">
+      <div class="modal-title">
+        <span>⬡ Month-End Critical Path Blockers Report</span>
+        <button class="header-btn" onclick="closeBlockersModal()">✕</button>
+      </div>
+      <div class="modal-subtitle">Active task dependencies preventing downstream close reporting phases.</div>
+      <div id="blockers-report-content"></div>
+      <div class="modal-actions">
+        <button class="header-btn primary" onclick="closeBlockersModal()">Close Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW ACCRUAL -->
+  <div id="modal-new-accrual" class="modal-overlay hidden" onclick="if(event.target===this)closeNewAccrualModal()">
+    <div class="modal-card">
+      <div class="modal-title">
+        <span>+ Record New Accrual Entry</span>
+        <button class="header-btn" onclick="closeNewAccrualModal()">✕</button>
+      </div>
+      <div class="modal-subtitle">Add recurring or one-off accrual line to current month-end schedule.</div>
+      
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" id="na-desc" class="form-input" placeholder="e.g. Q1 Audit Fee True-Up">
+      </div>
+      <div class="grid-2" style="margin-bottom:0">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="na-cat" class="form-select">
+            <option value="Personnel">Personnel</option>
+            <option value="Premises">Premises</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Operations">Operations</option>
+            <option value="Finance">Finance</option>
+            <option value="Provisions">Provisions</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Entity</label>
+          <select id="na-entity" class="form-select">
+            <option value="Consolidated">Consolidated</option>
+            <option value="Div A">Division A</option>
+            <option value="Div B">Division B</option>
+            <option value="HQ">HQ</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:0">
+        <div class="form-group">
+          <label class="form-label">Monthly Amount (€M)</label>
+          <input type="number" id="na-amount" class="form-input" step="0.01" placeholder="0.25">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Owner</label>
+          <input type="text" id="na-owner" class="form-input" placeholder="Controller / FP&A">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Basis of Estimation</label>
+        <input type="text" id="na-basis" class="form-input" placeholder="Contract clause / 3-month run-rate">
+      </div>
+      
+      <div class="modal-actions">
+        <button class="header-btn" onclick="closeNewAccrualModal()">Cancel</button>
+        <button class="header-btn primary" onclick="submitNewAccrual()">Add Accrual</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: INTERCO INVESTIGATION -->
+  <div id="modal-interco-investigate" class="modal-overlay hidden" onclick="if(event.target===this)closeIntercoModal()">
+    <div class="modal-card">
+      <div class="modal-title" id="interco-modal-title">
+        <span>Investigate Intercompany Discrepancy</span>
+        <button class="header-btn" onclick="closeIntercoModal()">✕</button>
+      </div>
+      <div class="modal-subtitle" id="interco-modal-subtitle">Raise formal inquiry to counterpart accounting entity.</div>
+
+      <div class="commentary-block" id="interco-modal-details" style="margin-bottom:14px; font-size:12px;"></div>
+
+      <div class="form-group">
+        <label class="form-label">Investigation Notes / Reconciliation Action</label>
+        <textarea id="interco-modal-notes" class="form-textarea" rows="4" placeholder="Explain timing difference, FX variance, or missing invoice details..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="header-btn" onclick="closeIntercoModal()">Cancel</button>
+        <button class="header-btn primary" id="interco-modal-submit" onclick="submitIntercoInvestigation()">Submit Inquiry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DATA IMPORT MAPPING -->
+  <div id="modal-data-import" class="modal-overlay hidden">
+    <div class="modal-card wide">
+      <div class="modal-title">
+        <span>Map Your Data to FinController Pro</span>
+        <button class="header-btn" onclick="closeImportModal()">✕</button>
+      </div>
+      <div class="modal-subtitle">Preview uploaded file structure and assign financial columns to system metrics.</div>
+
+      <div class="table-wrap" style="max-height:160px; margin-bottom:16px;">
+        <table class="data-table" id="import-preview-table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="grid-2" id="import-mapping-fields">
+        <div class="form-group">
+          <label class="form-label">Month / Period Column</label>
+          <select id="map-col-period" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Revenue Column</label>
+          <select id="map-col-revenue" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">COGS Column</label>
+          <select id="map-col-cogs" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">EBITDA Column</label>
+          <select id="map-col-ebitda" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Net Income Column</label>
+          <select id="map-col-netincome" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Headcount Column (Optional)</label>
+          <select id="map-col-headcount" class="form-select"></select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="header-btn" onclick="closeImportModal()">Cancel</button>
+        <button class="header-btn primary" onclick="confirmDataMapping()">Confirm Mapping & Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANCIAL ANALYST ENGINE -->
+  <div id="ai-panel" class="hidden">
+    <div id="ai-panel-header">
+      <div class="ai-title disconnected" id="ai-panel-title">Financial Analyst</div>
+      <div id="ai-panel-actions">
+        <button id="ai-connect-btn" onclick="openAIModal()">Connect</button>
+        <button id="ai-remove-btn" onclick="removeAIKey()" style="display:none">Remove Key</button>
+      </div>
+    </div>
+    <div id="ai-context-bar">Context: Loading...</div>
+    <div id="ai-messages">
+      <div class="ai-welcome">
+        <div style="font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:12px;">NEXOVA · FINANCIAL ANALYST</div>
+        <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">Ask me about variance drivers, draft management commentary, interpret KPIs, or explain any number in this report.</p>
+        <div class="ai-quick-prompts">
+          <button class="ai-quick-btn" onclick="sendQuickPrompt('Why did revenue miss budget?')">Why did revenue miss budget?</button>
+          <button class="ai-quick-btn" onclick="sendQuickPrompt('Draft EBITDA commentary for CFO')">Draft EBITDA commentary for CFO</button>
+          <button class="ai-quick-btn" onclick="sendQuickPrompt('What is driving the DSO increase?')">What is driving the DSO increase?</button>
+          <button class="ai-quick-btn" onclick="sendQuickPrompt('Summarise the close checklist status')">Summarise the close checklist status</button>
+          <button class="ai-quick-btn" onclick="sendQuickPrompt('Which alerts need immediate action?')">Which alerts need immediate action?</button>
+        </div>
+      </div>
+    </div>
+    <div id="ai-input-area">
+      <textarea id="ai-input" placeholder="Ask about the data, request analysis, flag risks..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMessage()}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button id="ai-send-btn" onclick="sendAIMessage()">Send</button>
+    </div>
+  </div>
+
+  <button id="ai-toggle" onclick="toggleAIPanel()" title="Financial Analyst">AI</button>
+
+  <!-- ANALYST CONFIGURATION MODAL -->
+  <div id="ai-modal-overlay" class="hidden modal-overlay" onclick="if(event.target===this)closeAIModal()">
+    <div class="modal-card" style="width:440px;">
+      <h3 style="font-size:16px; font-weight:600; margin-bottom:6px;">Configure Financial Analyst Engine</h3>
+      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:14px; line-height:1.6;">
+        Select your preferred language intelligence provider and enter your API credentials.
+      </p>
+      <div style="font-size:11px; color:var(--color-fav); background:var(--color-fav-bg); border:1px solid var(--color-fav); border-radius:4px; padding:8px 12px; margin-bottom:16px; line-height:1.5;">
+        🔒 <strong>Enterprise Security & Privacy:</strong> Credentials are stored strictly inside your browser's private local storage sandbox. No keys are ever transmitted to third parties or central servers.
+      </div>
+      <div class="form-group">
+        <label class="form-label">AI Provider</label>
+        <select id="ai-provider-select" class="form-select" onchange="updateProviderHint()">
+          <option value="openrouter_glm5">GLM 5.2 (OpenRouter)</option>
+          <option value="nvidia_nemotron">NVIDIA Nemotron (nemotron-3-ultra-550b-a55b)</option>
+          <option value="voice">Voice AI (GLM-5.2 + OpenRouter TTS)</option>
+          <option value="zai5">GLM-5.2 (z.ai)</option>
+          <option value="zai">z.ai (GLM-4-Flash)</option>
+          <option value="glm">GLM-4-Flash (Zhipu)</option>
+          <option value="claude">Claude Sonnet (Anthropic)</option>
+          <option value="openai">GPT-4o-mini (OpenAI)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">API Key</label>
+        <input type="password" id="ai-key-input" class="form-input" placeholder="Paste your API key here..." autocomplete="off">
+        <div id="ai-key-hint" style="font-size:11px;color:var(--text-muted);margin-top:4px">Select a provider to see key information.</div>
+      </div>
+      <div id="ai-or-key-container" class="form-group" style="display:none;">
+        <label class="form-label">OpenRouter API Key (For TTS)</label>
+        <input type="password" id="ai-or-key-input" class="form-input" placeholder="Paste OpenRouter API key..." autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button class="header-btn" onclick="closeAIModal()">Cancel</button>
+        <button class="header-btn primary" onclick="saveAIKey()">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT GENERATION OVERLAY -->
+  <div id="ai-export-overlay" class="hidden">
+    <div class="ai-spinner"></div>
+    <p>Financial Analyst is generating your report...</p>
+    <div id="ai-export-status">Analyzing financial data...</div>
+  </div>
+
+</div>

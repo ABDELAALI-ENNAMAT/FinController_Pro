@@ -1,0 +1,15 @@
+.env
+*.env
+.env.*
+node_modules/
+.agents/
+api/
+cors-proxy.*
+output.txt
+chart-test*.html
+test_*.html
+*.docx
+build.py
+vercel.json
+.DS_Store
+Thumbs.db
